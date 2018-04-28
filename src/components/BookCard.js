@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import FontAwesome from 'react-fontawesome'
+import { Link } from 'react-router-dom'
 
 class BookCard extends Component {
   static propTypes = {
@@ -20,7 +20,7 @@ class BookCard extends Component {
             <option value="currentlyReading">Currently Reading</option>
             <option value="read">Read</option>
         </select>
-        <button class="primary button"><FontAwesome icon="info"/> More Info</button>
+        <Link to={`/book/${book.id}`} className="button button-primary more-info">More Info</Link>
       </div>
     );
   }
