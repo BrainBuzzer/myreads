@@ -1,8 +1,17 @@
 import React, { Component } from 'react'
-import BookCard from './BookCard'
 import * as BooksAPI from '../utils/BooksAPI.js'
+import FaSearch from 'react-icons/lib/fa/search'
+import { Link } from 'react-router-dom'
+import { chunk } from '../utils/helper'
+import BookRow from './BookRow'
+import PropTypes from 'prop-types'
 
 class Home extends Component {
+  static propTypes = {
+    books: PropTypes.array.isRequired,
+    updateShelf: PropTypes.func.isRequired
+  }
+
   state = {
     wantToRead: [],
     currentlyReading: [],
@@ -10,25 +19,33 @@ class Home extends Component {
     loading: true
   }
 
-  getBooks() {
+  static getDerivedStateFromProps(nextProps, prevState) {
     let wantToRead = [], currentlyReading = [], read = [];
-    BooksAPI.getAll().then((books) => {
-      books.filter(book => {
-        if(book.shelf==="wantToRead") {
+    nextProps.books.filter(book => {
+      switch(book.shelf) {
+        case 'wantToRead':
           wantToRead.push(book)
-        } else if(book.shelf==="currentlyReading") {
+          break;
+        case "currentlyReading":
           currentlyReading.push(book)
-        } else if(book.shelf==="read") {
+          break;
+        case "read":
           read.push(book)
-        }
-      })
-      this.setState({
-        wantToRead,
-        currentlyReading,
-        read,
-        loading: false
-      })
+          break;
+        default:
+          break;
+      }
+      return null;
     })
+    wantToRead = chunk(wantToRead, 4)
+    currentlyReading = chunk(currentlyReading, 4)
+    read = chunk(read, 4)
+    return {
+      wantToRead,
+      currentlyReading,
+      read,
+      loading: false
+    }
   }
 
   updateStatus = (book, val) => {
@@ -36,54 +53,64 @@ class Home extends Component {
       loading: true
     })
     BooksAPI.update(book, val).then(res => {
+      this.props.updateShelf(book, val)
       switch(book.shelf) {
         case 'wantToRead':
-          this.setState((prev) => ({
-            wantToRead: prev.wantToRead.filter(b => b.id !== book.id)
-          }))
+          this.setState((prev) => {
+            let ar = [].concat.apply([], prev.wantToRead);
+            ar = chunk(ar.filter(b => b.id !== book.id), 4)
+            return { wantToRead: ar }
+          })
           break;
         case 'currentlyReading':
-          this.setState((prev) => ({
-            currentlyReading: prev.currentlyReading.filter(b => b.id !== book.id)
-          }))
+          this.setState((prev) => {
+            let ar = [].concat.apply([], prev.currentlyReading);
+            ar = chunk(ar.filter(b => b.id !== book.id), 4)
+            return { currentlyReading: ar }
+          })
           break;
         case 'read':
-          this.setState((prev) => ({
-            read: prev.read.filter(b => b.id !== book.id)
-          }))
+          this.setState((prev) => {
+            let ar = [].concat.apply([], prev.read);
+            ar = chunk(ar.filter(b => b.id !== book.id), 4)
+            return { read: ar }
+          })
+          break;
+        default:
           break;
       }
       switch(val) {
         case 'wantToRead':
           this.setState((prev) => {
             book.shelf = 'wantToRead'
-            let ar = prev.wantToRead.concat(book)
+            let ar = [].concat.apply([], prev.wantToRead);
+            ar = chunk(ar.concat(book), 4);
             return { wantToRead: ar }
           })
           break;
         case 'currentlyReading':
           book.shelf = 'currentlyReading'
           this.setState((prev) => {
-            let ar = prev.currentlyReading.concat(book)
+            let ar = [].concat.apply([], prev.currentlyReading);
+            ar = chunk(ar.concat(book), 4);
             return { currentlyReading: ar }
           })
           break;
         case 'read':
           book.shelf = 'read'
           this.setState((prev) => {
-            let ar = prev.read.concat(book)
+            let ar = [].concat.apply([], prev.read);
+            ar = chunk(ar.concat(book), 4);
             return { read: ar }
           })
+          break;
+        default:
           break;
       }
       this.setState({
         loading: false
       })
     })
-  }
-
-  componentDidMount() {
-    this.getBooks()
   }
 
   render() {
@@ -97,29 +124,24 @@ class Home extends Component {
         <div>
           <div className="sep"><span>Want to read</span></div>
           <div className="list-books row">
-            { wantToRead.map(book => (
-              <div className="three columns" key={book.id}>
-                <BookCard book={book} changeStatus={this.updateStatus}/>
-              </div>
+            { wantToRead.map((books, i) => (
+              <BookRow books={books} updateShelf={this.updateStatus} originalBooks={this.props.books} key={i} />
             ))}
           </div>
           <div className="sep"><span>Currently Reading</span></div>
           <div className="list-books row">
-            { currentlyReading.map(book => (
-              <div className="three columns" key={book.id}>
-                <BookCard book={book} changeStatus={this.updateStatus}/>
-              </div>
+            { currentlyReading.map((books, i) => (
+              <BookRow books={books} updateShelf={this.updateStatus} originalBooks={this.props.books} key={i} />
             ))}
           </div>
           <div className="sep"><span>Read</span></div>
           <div className="list-books row">
-            { read.map(book => (
-              <div className="three columns" key={book.id}>
-                <BookCard book={book} changeStatus={this.updateStatus}/>
-              </div>
+            { read.map((books, i) => (
+              <BookRow books={books} updateShelf={this.updateStatus} originalBooks={this.props.books} key={i} />
             ))}
           </div>
         </div>
+        <Link to="/search" className="search-icon"><FaSearch /></Link>
       </div>
     )
   }

@@ -1,19 +1,44 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom'
+import { Route, Link } from 'react-router-dom'
 import './style/index.css'
 import Home from './components/Home'
 import Search from './components/Search'
+import * as BooksAPI from './utils/BooksAPI'
 
 class App extends Component {
+  state = {
+    books: []
+  }
+
+  updateShelf = (book, val) => {
+    this.setState((prev) => {
+      book.shelf = val
+      let books = prev.books.filter(b => b.id !== book.id)
+      books.push(book)
+      return { books }
+    })
+  }
+
+  componentWillMount() {
+    BooksAPI.getAll().then((books) => {
+      this.setState({books})
+    })
+  }
+
   render() {
+    const {books} = this.state
     return (
       <div>
-        <div className="app-header"><h4>MyReads App</h4></div>
+        <div className="app-header">
+          <Link to="/"><h4>MyReads App</h4></Link>
+        </div>
         <div className="container">
-          <Route exact path="/" component={Home} />
-          <Route exact path="/search" render={() =>
-            <Search />
-          } />
+          <Route exact path="/" render={() => (
+            <Home books={books} updateShelf={this.updateShelf}/>
+          )} />
+          <Route exact path="/search" render={() => (
+            <Search books={books} updateShelf={this.updateShelf}/>
+          )} />
         </div>
       </div>
     );
