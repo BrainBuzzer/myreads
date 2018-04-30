@@ -4,6 +4,7 @@ import './style/index.css'
 import Home from './components/Home'
 import Search from './components/Search'
 import * as BooksAPI from './utils/BooksAPI'
+import BookDetails from './components/BookDetails';
 
 class App extends Component {
   state = {
@@ -39,6 +40,7 @@ class App extends Component {
           <Route exact path="/search" render={() => (
             <Search books={books} updateShelf={this.updateShelf}/>
           )} />
+          <Route path="/book/:id" component={BookDetails} />
         </div>
       </div>
     );

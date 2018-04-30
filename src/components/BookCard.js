@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import noCover from '../icons/no-cover-image.png'
+import StarRatingComponent from 'react-star-rating-component'
 
 class BookCard extends Component {
   static propTypes = {
@@ -34,6 +35,17 @@ class BookCard extends Component {
             <option value="none">None</option>
         </select>
         <div className="book-name">{book.title}</div>
+        { book.averageRating && (
+          <div className="book-rating">
+            <StarRatingComponent
+              name="rating"
+              editing={false}
+              starCount={5}
+              value={book.averageRating}
+            />
+            <span>({book.ratingsCount})</span>
+          </div>
+        )}
         <Link to={`/book/${book.id}`} className="button button-primary more-info">More Info</Link>
       </div>
     );

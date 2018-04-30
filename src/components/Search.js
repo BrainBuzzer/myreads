@@ -23,15 +23,15 @@ class Search extends Component {
       status: 'Loading',
       loading: true
     })
-    if(event.target.value==='') {
+    let val = event.target.value.trim()
+    if(val==='') {
       return this.setState({
         results: [],
         status: 'Nothing to Show',
         loading: false
       })
     } else {
-      BooksAPI.search(event.target.value).then(res => {
-        console.log(res)
+      BooksAPI.search(val).then(res => {
         let results = [];
         if (res.error) {
           this.setState({
