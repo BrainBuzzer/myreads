@@ -4,6 +4,12 @@ import { Link } from 'react-router-dom'
 import noCover from '../icons/no-cover-image.png'
 import StarRatingComponent from 'react-star-rating-component'
 
+/**
+ * Card shown for single Book with details like rating and shelf.
+ *
+ * @class BookCard
+ * @extends {Component}
+ */
 class BookCard extends Component {
   static propTypes = {
     book: PropTypes.object.isRequired,

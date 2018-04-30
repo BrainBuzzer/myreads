@@ -11,6 +11,11 @@ class App extends Component {
     books: []
   }
 
+  /**
+   * Used to update the global books variable when a book's shelf is changed.
+   *
+   * @memberof App
+   */
   updateShelf = (book, val) => {
     this.setState((prev) => {
       book.shelf = val

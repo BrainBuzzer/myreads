@@ -6,6 +6,12 @@ import FaAngleLeft from 'react-icons/lib/fa/angle-left'
 import { chunk } from '../utils/helper';
 import { Link } from 'react-router-dom'
 
+/**
+ * Search Page
+ *
+ * @class Search
+ * @extends {Component}
+ */
 class Search extends Component {
   static propTypes = {
     books: PropTypes.array.isRequired,
@@ -18,6 +24,11 @@ class Search extends Component {
     loading: false
   }
 
+  /**
+   * Search for the user query on server
+   *
+   * @memberof Search
+   */
   searchQuery = (event) => {
     this.setState({
       status: 'Loading',
@@ -53,6 +64,11 @@ class Search extends Component {
     }
   }
 
+  /**
+   * Updates the shelf both locally and on server.
+   *
+   * @memberof Search
+   */
   updateShelf = (book, shelf) => {
     this.setState({
       loading: true

@@ -6,6 +6,12 @@ import { chunk } from '../utils/helper'
 import BookRow from './BookRow'
 import PropTypes from 'prop-types'
 
+/**
+ * Home page
+ *
+ * @class Home
+ * @extends {Component}
+ */
 class Home extends Component {
   static propTypes = {
     books: PropTypes.array.isRequired,
@@ -19,6 +25,17 @@ class Home extends Component {
     loading: true
   }
 
+  /**
+   * Load the content of the prop that is passed and then
+   * chop the provided array into the given category and
+   * update the state accordingly.
+   *
+   * @static
+   * @param {any} nextProps - Gets the props when updated
+   * @param {any} prevState - Previous State of the component
+   * @returns updated state variable
+   * @memberof Home
+   */
   static getDerivedStateFromProps(nextProps, prevState) {
     let wantToRead = [], currentlyReading = [], read = [];
     nextProps.books.filter(book => {
@@ -48,6 +65,12 @@ class Home extends Component {
     }
   }
 
+  /**
+   * This method updates the shelf of the given book both locally
+   * and on server.
+   *
+   * @memberof Home
+   */
   updateStatus = (book, val) => {
     this.setState({
       loading: true

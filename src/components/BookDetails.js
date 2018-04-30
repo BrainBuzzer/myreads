@@ -6,6 +6,13 @@ import noCover from '../icons/no-cover-image.png'
 import FaAngleLeft from 'react-icons/lib/fa/angle-left'
 import { Link } from 'react-router-dom'
 
+/**
+ * Details of the book that will be rendered at the path '/book/:id'
+ * Where `id` is the book's unique identifier as per API.
+ *
+ * @class BookDetails
+ * @extends {Component}
+ */
 class BookDetails extends Component {
   static propTypes = {
     match: PropTypes.object.isRequired,
@@ -16,6 +23,12 @@ class BookDetails extends Component {
     loading: true
   }
 
+  /**
+   * Get the details of the book from API.
+   *
+   * @param {any} id - ID of the book
+   * @memberof BookDetails
+   */
   getBook(id) {
     get(id).then(book => {
       this.setState({ book, loading: false })
