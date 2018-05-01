@@ -37,26 +37,10 @@ class Home extends Component {
    * @memberof Home
    */
   static getDerivedStateFromProps(nextProps, prevState) {
-    let wantToRead = [], currentlyReading = [], read = [];
-    nextProps.books.filter(book => {
-      switch(book.shelf) {
-        case 'wantToRead':
-          wantToRead.push(book)
-          break;
-        case "currentlyReading":
-          currentlyReading.push(book)
-          break;
-        case "read":
-          read.push(book)
-          break;
-        default:
-          break;
-      }
-      return null;
-    })
-    wantToRead = chunk(wantToRead, 4)
-    currentlyReading = chunk(currentlyReading, 4)
-    read = chunk(read, 4)
+    const wantToRead = chunk(nextProps.books.filter(book => book.shelf==='wantToRead'), 4)
+    const currentlyReading = chunk(nextProps.books.filter(book => book.shelf==='currentlyReading'), 4)
+    const read = chunk(nextProps.books.filter(book => book.shelf==='read'), 4)
+
     return {
       wantToRead,
       currentlyReading,
