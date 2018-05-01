@@ -24,7 +24,7 @@ const BookCard = (props) => {
         className="status"
         onChange={(event) => changeStatus(book, event.target.value)}
         value={shelf}>
-          <option value="none" disabled>Select an Option</option>
+          <option value="select" disabled>Select an Option</option>
           <option value="wantToRead">Want To Read</option>
           <option value="currentlyReading">Currently Reading</option>
           <option value="read">Read</option>
