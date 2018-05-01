@@ -32,6 +32,7 @@ class Search extends Component {
   searchQuery = (event) => {
     this.setState({
       status: 'Loading',
+      results: [],
       loading: true
     })
     let val = event.target.value.trim()
